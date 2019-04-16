@@ -2,12 +2,12 @@
 
 jobs:
 
-- name: deploy-to-pws
+- name: deploy-to-qa
   serial: true
   plan:
   - get: resource-git
     trigger: true
-  - put: cf-pws
+  - put: cf-qa
     params:
       manifest: resource-git/manifest.yml
       environment_variables:
@@ -20,7 +20,7 @@ jobs:
   plan:
   - aggregate:
     - get: resource-git
-      passed: [deploy-to-pws]
+      passed: [deploy-to-qa]
       trigger: true
   - task: smoke-tests
     config:
@@ -66,14 +66,15 @@ resources:
     uri: ((git.uri))
     branch: ((git.branch))
 
-- name: cf-pws
+- name: cf-qa
   type: cf
   source:
-    api: ((pws.api))
-    username: ((pws.username))
-    password: ((pws.password))
-    organization: ((pws.organization))
-    space: ((pws.space))
+    api: ((qa.api))
+    username: ((qa.username))
+    password: ((qa.password))
+    organization: ((qa.organization))
+    space: ((qa.space))
+    skip_cert_check: ((qa.skip_cert_check))
 
 - name: cf-prod
   type: cf
@@ -83,4 +84,4 @@ resources:
     password: ((prod.password))
     organization: ((prod.organization))
     space: ((prod.space))
-    skip_cert_check: true
+    skip_cert_check: ((prod.skip_cert_check))
