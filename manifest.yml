@@ -1,0 +1,5 @@
+applications:
+- name: ((name))
+  instances: 2 
+  memory: 800M
+  disk_quota: 512M

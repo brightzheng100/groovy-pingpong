@@ -1,0 +1,56 @@
+---
+
+jobs:
+
+- name: deploy-to-pws
+  serial: true
+  plan:
+  - get: resource-git
+    trigger: true
+  - put: cf-pws
+    params:
+      manifest: resource-git/manifest.yml
+      current_app_name: ((app.name))
+      path: resource-git/*.groovy
+
+- name: promote-to-prod
+  serial: true
+  plan:
+  - aggregate:
+    - get: resource-git
+      passed: [deploy-to-pws]
+      trigger: true
+  - put: cf-prod
+    params:
+      manifest: resource-git/manifest.yml
+      vars:
+        name: ((app.name))
+      current_app_name: ((app.name))
+      path: resource-git/*.groovy
+
+resources:
+
+- name: resource-git
+  type: git
+  source:
+    uri: ((git.uri))
+    branch: ((git.branch))
+
+- name: cf-pws
+  type: cf
+  source:
+    api: ((pws.api))
+    username: ((pws.username))
+    password: ((pws.password))
+    organization: ((pws.organization))
+    space: ((pws.space))
+
+- name: cf-prod
+  type: cf
+  source:
+    api: ((prod.api))
+    username: ((prod.username))
+    password: ((prod.password))
+    organization: ((prodpws.organization))
+    space: ((prod.space))
+    skip_cert_check: true
