@@ -11,7 +11,7 @@ jobs:
     params:
       manifest: resource-git/manifest.yml
       current_app_name: ((app.name))
-      path: resource-git/*.groovy
+      path: resource-git/
 
 - name: promote-to-prod
   serial: true
@@ -26,7 +26,7 @@ jobs:
       vars:
         name: ((app.name))
       current_app_name: ((app.name))
-      path: resource-git/*.groovy
+      path: resource-git/
 
 resources:
 
