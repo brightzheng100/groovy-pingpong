@@ -10,20 +10,50 @@ jobs:
   - put: cf-pws
     params:
       manifest: resource-git/manifest.yml
+      environment_variables:
+        name: ((app.name))
       current_app_name: ((app.name))
       path: resource-git/
 
-- name: promote-to-prod
+- name: SIT
   serial: true
   plan:
   - aggregate:
     - get: resource-git
       passed: [deploy-to-pws]
       trigger: true
+  - task: smoke-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: busybox}
+      params:
+        app_url: ((app.url))
+      run:
+        path: sh
+        args:
+          - "-c"
+          - |
+            status_code=`wget --spider -S "${app_url}" 2>&1 | grep "HTTP/" | awk '{print $2}'`
+            echo "The status code returned is: $status_code"
+            if [ "$status_code" != "200" ]
+            then
+              echo "Expected status code from ${app_url} is 200, but got $status_code"
+              exit 1
+            fi
+
+- name: promote-to-prod
+  serial: true
+  plan:
+  - aggregate:
+    - get: resource-git
+      passed: [SIT]
+      #trigger: true
   - put: cf-prod
     params:
       manifest: resource-git/manifest.yml
-      vars:
+      environment_variables:
         name: ((app.name))
       current_app_name: ((app.name))
       path: resource-git/
@@ -51,6 +81,6 @@ resources:
     api: ((prod.api))
     username: ((prod.username))
     password: ((prod.password))
-    organization: ((prodpws.organization))
+    organization: ((prod.organization))
     space: ((prod.space))
     skip_cert_check: true
