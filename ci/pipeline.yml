@@ -11,7 +11,7 @@ jobs:
     params:
       manifest: resource-git/manifest.yml
       environment_variables:
-        name: ((app.name))
+        APP_NAME: ((app.name))
       current_app_name: ((app.name))
       path: resource-git/
 
