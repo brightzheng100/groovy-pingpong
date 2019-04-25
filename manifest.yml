@@ -1,5 +1,6 @@
 applications:
-- name: groovy-pingpong-bright
-  instances: 2 
+- name: ((name))    #groovy-pingpong
+  instances: 2
   memory: 800M
   disk_quota: 512M
+  #random-route: true

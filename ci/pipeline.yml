@@ -10,8 +10,8 @@ jobs:
   - put: cf-qa
     params:
       manifest: resource-git/manifest.yml
-      environment_variables:
-        APP_NAME: ((app.name))
+      vars:
+        name: ((app.name))
       current_app_name: ((app.name))
       path: resource-git/
 
