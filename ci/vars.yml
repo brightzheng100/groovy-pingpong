@@ -1,8 +1,9 @@
 ---
 
 app:
-  name: groovy-pingpong
-  url: https://groovy-pingpong.cfapps.io
+  name_qa: groovy-pingpong
+  name_prod: groovy-pingpong
+  url: https://groovy-pingpong.cfapps.io  # QA env' url
 
 git:
   uri: https://github.com/brightzheng100/groovy-pingpong.git
