@@ -1,15 +1,16 @@
 import org.springframework.core.env.*
 import java.util.Date
 
-@Controller
+@RestController
 class Application {
 
+	String message = "<div style=\"font-size: 100px; color: white; background-color: %s\">Hello World - %s!</div>"
 	String color = "blue";
 
 	@RequestMapping("/")
 	@ResponseBody
 	public String index(Model model) {
-		return "<body bgcolor='" + color + "'><h1>Hello Groovy World!</h1></body>"
+		return String.format(message, color, color)
 	}
 
 	@RequestMapping("/ping")
