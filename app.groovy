@@ -5,7 +5,7 @@ import java.util.Date
 class Application {
 
 	String message = "<div style=\"font-size: 100px; color: white; background-color: %s\">Hello World - %s!</div>"
-	String color = "blue";
+	String color = "green";
 
 	@RequestMapping("/")
 	@ResponseBody
